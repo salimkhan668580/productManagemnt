@@ -37,11 +37,11 @@ Gets all products
 * Response:
 	+ 200 OK: List of all products
 
-### GET /api/products/:id
+### GET /api/products?id
 
 Gets a product by ID
 
-* Path Parameters:
+* Query Parameters:
 	+ id: string
 * Response:
 	+ 200 OK: Product found
@@ -59,11 +59,11 @@ Creates a new product
 	+ 201 Created: Product created successfully
 	+ 400 Bad Request: Invalid input
 
-### PUT /api/products/:id
+### PUT /api/products?id
 
 Updates a product by ID
 
-* Path Parameters:
+* Query Parameters:
 	+ id: string
 * Request Body:
 	+ name: string
@@ -73,11 +73,11 @@ Updates a product by ID
 	+ 200 OK: Product updated successfully
 	+ 404 Not Found: Product not found
 
-### DELETE /api/products/:id
+### DELETE /api/products?id
 
 Deletes a product by ID
 
-* Path Parameters:
+* Query Parameters:
 	+ id: string
 * Response:
 	+ 204 No Content: Product deleted successfully
@@ -92,11 +92,11 @@ Gets all warehouses
 * Response:
 	+ 200 OK: List of all warehouses
 
-### GET /api/warehouses/:id
+### GET /api/warehouses?id
 
 Gets a warehouse by ID
 
-* Path Parameters:
+* Query Parameters:
 	+ id: string
 * Response:
 	+ 200 OK: Warehouse found
@@ -117,11 +117,11 @@ Creates a new warehouse
 	+ 201 Created: Warehouse created successfully
 	+ 400 Bad Request: Invalid input
 
-### PUT /api/warehouses/:id
+### PUT /api/warehouses?id
 
 Updates a warehouse by ID
 
-* Path Parameters:
+* Query Parameters:
 	+ id: string
 * Request Body:
 	+ name: string
@@ -134,11 +134,11 @@ Updates a warehouse by ID
 	+ 200 OK: Warehouse updated successfully
 	+ 404 Not Found: Warehouse not found
 
-### DELETE /api/warehouses/:id
+### DELETE /api/warehouses?id
 
 Deletes a warehouse by ID
 
-* Path Parameters:
+* Query Parameters:
 	+ id: string
 * Response:
 	+ 204 No Content: Warehouse deleted successfully
