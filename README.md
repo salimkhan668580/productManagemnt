@@ -2,6 +2,8 @@
 
 ## Authentication
 
+### Swager Link -> http://localhost:3000/api-docs/
+
 ### POST /api/auth/register
 
 Registers a new user

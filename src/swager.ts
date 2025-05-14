@@ -16,6 +16,9 @@ const options = {
       {
         url: 'http://localhost:3000',
       },
+      {
+        url: 'http://mobulous:3000',
+      },
     ],
   },
   apis: ['./src/routes/*.ts'], // 👈 Path to your routes

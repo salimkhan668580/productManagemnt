@@ -97,7 +97,7 @@ warehouseRouter.post('/', createWarehouse);
 
 /**
  * @swagger
- * /api/warehouse:
+ * /api/wharehouse:
  *   get:
  *     summary: Get all warehouses
  *     tags: [Warehouses]
