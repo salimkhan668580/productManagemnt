@@ -31,6 +31,7 @@ import {
   deleteWarehouse,
   getAllWarehouses,
   getWarehouseById,
+  howmuchProduct,
   updateWarehouse,
 } from '../Controller/wareHouseController';
 import { isLoggedIn } from '../middleware/authMiddleware';
@@ -214,5 +215,36 @@ warehouseRouter.put('/update', updateWarehouse);
  *         description: Warehouse not found
  */
 warehouseRouter.delete('/', deleteWarehouse);
+
+
+
+
+/**
+ * @swagger
+ * /api/warehouse/howmuch-warehouse:
+ *   get:
+ *     summary: Get the quantity of products in a warehouse
+ *     tags: [Warehouses]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the warehouse
+ *       - in: header
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Warehouse retrieved successfully
+ *       400:
+ *         description: Invalid Warehouse ID
+ *       404:
+ *         description: Warehouse not found
+ */
+warehouseRouter.get('/howmuch-warehouse', howmuchProduct);
 
 export default warehouseRouter;

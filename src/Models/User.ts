@@ -6,7 +6,9 @@ interface User extends Document {
   username: string;
   email: string;
   password: string;
-  roles: string;
+  roles: {
+    type: string;
+  };
   location:{
     type: 'Point',
     coordinates: [number, number]; // [longitude, latitude]

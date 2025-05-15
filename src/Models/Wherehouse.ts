@@ -24,13 +24,6 @@ const warehouseSchema = new Schema<Warehouse>(
         required: true,
       },
     },
-    productIds: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        // required: true,
-      },
-    ],
     capacity: {
       type: Number,
       default: 0,

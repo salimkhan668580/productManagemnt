@@ -2,7 +2,7 @@
 
 ## Authentication
 
-### Swager Link -> http://localhost:3000/api-docs/
+### Swagger Link -> http://localhost:3000/api-docs/
 
 ### POST /api/auth/register
 
@@ -143,3 +143,5 @@ Deletes a warehouse by ID
 * Response:
 	+ 204 No Content: Warehouse deleted successfully
 	+ 404 Not Found: Warehouse not found
+
+

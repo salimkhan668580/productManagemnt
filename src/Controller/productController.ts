@@ -39,7 +39,7 @@ export const getAllProducts=asyncWrapper( async (req:Request, res:Response) =>{
     const { long,lat } = req.query;
     
      if (!long || !lat) {
-     const products = await Product.find();
+     const products = await Product.find().populate('warehouseId').select('-quantity');
   
      if (!products || products.length === 0) {
         return res.status(404).json({
@@ -94,13 +94,13 @@ export const getAllProducts=asyncWrapper( async (req:Request, res:Response) =>{
     },
   },
   {
-    $unwind: '$products', // if you want flat list of products
+    $unwind: '$products', 
   },
   {
     $project: {
       productName: '$products.productName',
       price: '$products.price',
-      quantity: '$products.quantity',
+     
       description: '$products.description',
       distance: 1,
       wareHouseName: '$wareHouseName',

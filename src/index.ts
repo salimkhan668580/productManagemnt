@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import http from 'http';
 import dbConnect from './DBConnect/db';
 import 'dotenv/config'
 
@@ -13,9 +14,11 @@ import warehouseRouter from './routes/whereHouse';
 import { isLoggedIn } from './middleware/authMiddleware';
 import productRouter from './routes/productRoute';
 import swaggerDocs from './swager';
+import { registerSocketServer } from './socket';
 
 const app = express();
 const PORT = 3000;
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -24,10 +27,11 @@ app.use('/api/auth', authRouter);
 app.use('/api/wharehouse', warehouseRouter);
 app.use('/api/product', productRouter);
 
-
 app.get('/',isLoggedIn ,(req: Request, res: Response) => {
   res.send('Hello from Express + TypeScript!');
 });
+
+
 
 
 
@@ -49,7 +53,11 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 swaggerDocs(app);
-app.listen(PORT, () => {
+
+const httpServer = http.createServer(app);
+registerSocketServer(httpServer);
+
+httpServer.listen(PORT, () => {
     console.log(`📚 Swagger docs at http://localhost:${PORT}/api-docs`);
   console.log(`Server running at http://localhost:${PORT}`);
 });

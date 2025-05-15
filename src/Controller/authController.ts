@@ -33,9 +33,11 @@ export const loginUser = asyncWrapper( async (req: Request, res: Response) => {
       })
     }
 const isMatch = comparePassword(validateSchema.data.password,findUser.password);
+
   if (!isMatch) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
+
 
   const token = generateToken({
     id: String(findUser._id),
