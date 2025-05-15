@@ -21,7 +21,7 @@ export type message={
 export type conversation = {
     members: mongoose.Types.ObjectId[];
     lastMessage: mongoose.Types.ObjectId;
-
+    messages: mongoose.Types.ObjectId[];
     createdAt?: Date;
     updatedAt?: Date;
 }

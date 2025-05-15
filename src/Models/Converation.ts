@@ -11,7 +11,11 @@ const conversationSchema = new mongoose.Schema<conversation>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
-
+    messages: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Message",
+        default: [],
+    }
   },
   { timestamps: true }
 );

@@ -46,7 +46,22 @@ export const registerSocketServer = (httpServer: http.Server) => {
       socket.to(normalizedRoomId).emit("rcv_message", message);
       const newMessage = new Message({ senderId, receiverId, message });
       await newMessage.save();
+       let conversation = await Conversation.findOne({
+        members: { $all: [senderId, receiverId], $size: 2 }
+      });
 
+      if (conversation) {
+        conversation.messages.push(newMessage._id);
+        conversation.lastMessage = newMessage._id;
+        await conversation.save();
+      }else{
+        conversation = new Conversation({
+          members: [senderId, receiverId],
+          messages: [newMessage._id],
+          lastMessage: newMessage._id,
+        });
+        await conversation.save();
+      }
     });
   });
 };
