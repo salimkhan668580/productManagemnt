@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 import http from "http";
 import Conversation from './Models/Converation';
 import Message from './Models/Message';
-
+import  jwt from "jsonwebtoken";
 export const registerSocketServer = (httpServer: http.Server) => {
   const io = new Server(httpServer, {
     cors: {
@@ -11,6 +11,23 @@ export const registerSocketServer = (httpServer: http.Server) => {
       methods: ["GET", "POST"]
     }
   });
+
+  // Middleware for token authentication
+// io.use((socket, next) => {
+//   const token = socket.handshake.auth.token;
+
+//   if (!token) {
+//     return next(new Error("Authentication error: Token required"));
+//   }
+
+//   try {
+//     const decoded = jwt.verify(token, "your_jwt_secret_key");
+//     next();
+//   } catch (err) {
+//     next(new Error("Authentication error: Invalid token"));
+//   }
+// });
+
 
   io.on("connection", (socket) => {
     console.log("Socket ID:", socket.id);

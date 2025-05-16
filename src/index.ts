@@ -16,6 +16,8 @@ import productRouter from './routes/productRoute';
 import swaggerDocs from './swager';
 import { registerSocketServer } from './socket';
 import messageRouter from './routes/messageRoute';
+import activityLogRouter from './routes/activityLogRouter';
+import "./Corn/corn.ts"
 
 const app = express();
 const PORT = 3000;
@@ -28,6 +30,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/wharehouse', warehouseRouter);
 app.use('/api/product', productRouter);
 app.use('/api/message',messageRouter);
+app.use('/api/activity-log', activityLogRouter);
 
 app.get('/',isLoggedIn ,(req: Request, res: Response) => {
   res.send('Hello from Express + TypeScript!');

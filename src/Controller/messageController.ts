@@ -1,4 +1,3 @@
-import { Last } from './../../node_modules/socket.io/dist/typed-events.d';
 import mongoose from "mongoose";
 import Conversation from "../Models/Converation";
 import Message from "../Models/Message";

@@ -4,6 +4,8 @@ import { ProdcutSchema} from "../Zod/ZodSchema";
 import Product from "../Models/Product";
 import { number, z } from "zod";
 import Wherehouse from "../Models/Wherehouse";
+import saveActivityLog from "../lib/saveActivity";
+import mongoose from "mongoose";
 
 export const createProduct=asyncWrapper( async (req:Request, res:Response) =>{
     const validateSchema=ProdcutSchema.safeParse(req.body);
@@ -24,6 +26,18 @@ export const createProduct=asyncWrapper( async (req:Request, res:Response) =>{
     await warehouse.save();
     const result = new Product(validateSchema.data);
     await result.save();
+
+    if(req.user?.roles!=='admin'){
+    const data={
+      userId:new mongoose.Types.ObjectId(req.user?.id as string),
+      action: 'create product',
+      method: req.method,
+      endPoint: req.originalUrl,
+      message: 'Product created successfully',
+    }
+    await saveActivityLog(data);
+    }
+
     res.status(201).json({
         message: 'Product created successfully',
         data: result
@@ -47,6 +61,19 @@ export const getAllProducts=asyncWrapper( async (req:Request, res:Response) =>{
             data: null
         });
     }
+
+    // save activity logs
+    if(req.user?.roles!=='admin'){
+    const data={
+      userId:new mongoose.Types.ObjectId(req.user?.id as string),
+      action: 'get all products',
+      method: req.method,
+      endPoint: req.originalUrl,
+      message: 'Products fetched successfully',
+    }
+    await saveActivityLog(data);
+    }
+
      return res.status(200).json({
         message: 'Products fetched successfully',
         data: products
@@ -128,12 +155,24 @@ export const getProductById=asyncWrapper( async (req:Request, res:Response) =>{
             message: 'Product not found',
         });
     }
+    // save activity logs
+    if(req.user?.roles!=='admin'){
+    const data={
+      userId:new mongoose.Types.ObjectId(req.user?.id as string),
+      action: 'get product by id',
+      method: req.method,
+      endPoint: req.originalUrl,
+      message: 'Product fetched successfully',
+    }
+    await saveActivityLog(data);
+    }
     res.status(200).json({
         message: 'Product fetched successfully',
         data: product,
     });
 
 })
+
 
 export const updateProduct=asyncWrapper( async (req:Request, res:Response) =>{
     const { id } = req.query;
