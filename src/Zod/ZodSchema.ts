@@ -89,3 +89,23 @@ export const ProdcutSchema=z.object({
     .string({ required_error: "Warehouse ID is required" })
     .min(1, "Warehouse ID cannot be empty"),
 })
+
+export const orderSchema =  z.object({
+  cartItems: z.array(
+    z.object({
+      productId: z.string({ required_error: "Product ID is required" }),
+      quantity: z.number({ required_error: "Quantity is required" })
+        .min(1, { message: "Quantity must be at least 1" }),
+    })
+  ).nonempty({ message: "Cart must contain at least one item" }),
+
+  shippingAddress: z.object({
+    street: z.string({ required_error: "Street is required" }),
+    city: z.string({ required_error: "City is required" }),
+    state: z.string({ required_error: "State is required" }),
+    zipCode: z.string({ required_error: "Zip Code is required" }),
+    country: z.string({ required_error: "Country is required" }),
+  }),
+
+  status: z.string().optional(),
+});

@@ -18,6 +18,7 @@ import { registerSocketServer } from './socket';
 import messageRouter from './routes/messageRoute';
 import activityLogRouter from './routes/activityLogRouter';
 import "./Corn/corn.ts"
+import orderRouter from './routes/orderRoutes';
 
 const app = express();
 const PORT = 3000;
@@ -31,6 +32,8 @@ app.use('/api/wharehouse', warehouseRouter);
 app.use('/api/product', productRouter);
 app.use('/api/message',messageRouter);
 app.use('/api/activity-log', activityLogRouter);
+app.use('/api/createPayment', orderRouter);
+
 
 app.get('/',isLoggedIn ,(req: Request, res: Response) => {
   res.send('Hello from Express + TypeScript!');
@@ -43,7 +46,6 @@ app.get('/',isLoggedIn ,(req: Request, res: Response) => {
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
  if (err instanceof ZodError) {
-    console.log("eror=>",err);
     res.status(400).json({
       error: "Validation Error",
       details: err.errors.map(e => e.message).join(', '),
@@ -53,7 +55,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
   res.status(500).json({
     error: "Internal Server Error",
-    message: err.message || "Something went wrong",
+    message: err.message || err.description||"Something went wrong",
   });
 });
 
