@@ -168,7 +168,7 @@ Adds a product to the user's wishlist
 	+ 201 Created: Product added to wishlist successfully
 	+ 401 Unauthorized: Unauthorized
 
-### DELETE /api/wishlist?productId
+### POST /api/wishlist?productId
 
 Removes a product from the user's wishlist
 
