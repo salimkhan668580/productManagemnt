@@ -145,3 +145,36 @@ Deletes a warehouse by ID
 	+ 404 Not Found: Warehouse not found
 
 
+
+## Wishlist
+
+### GET /api/wishlist
+
+Gets the user's wishlist
+
+* Authenticated with user token
+* Response:
+	+ 200 OK: Wishlist fetched successfully
+	+ 401 Unauthorized: Unauthorized
+
+### POST /api/wishlist
+
+Adds a product to the user's wishlist
+
+* Request Body:
+	+ productId: string
+* Authenticated with user token
+* Response:
+	+ 201 Created: Product added to wishlist successfully
+	+ 401 Unauthorized: Unauthorized
+
+### DELETE /api/wishlist?productId
+
+Removes a product from the user's wishlist
+
+* Query Parameters:
+	+ productId: string
+* Authenticated with user token
+* Response:
+	+ 204 No Content: Product removed from wishlist successfully
+	+ 401 Unauthorized: Unauthorized
