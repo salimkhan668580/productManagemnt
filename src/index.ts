@@ -19,6 +19,7 @@ import messageRouter from './routes/messageRoute';
 import activityLogRouter from './routes/activityLogRouter';
 import "./Corn/corn.ts"
 import orderRouter from './routes/orderRoutes';
+import wishListRouter from './routes/wishListRouter';
 
 const app = express();
 const PORT = 3000;
@@ -33,15 +34,12 @@ app.use('/api/product', productRouter);
 app.use('/api/message',messageRouter);
 app.use('/api/activity-log', activityLogRouter);
 app.use('/api/createPayment', orderRouter);
+app.use('/api/wishlist', wishListRouter);
 
 
 app.get('/',isLoggedIn ,(req: Request, res: Response) => {
   res.send('Hello from Express + TypeScript!');
 });
-
-
-
-
 
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
