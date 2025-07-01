@@ -17,8 +17,6 @@ export const deleteById=asyncWrapper(async (req:Request, res:Response) => {
         return res.status(400).json({ message: "Log ID is required" });
     }
 
-
-
     const activityLogsData = await ActivityLog.findById(logId);
     if (!activityLogsData) {
   return res.status(404).json({ message: "Activity Log not found" });

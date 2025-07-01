@@ -5,6 +5,7 @@ import Wherehouse from "../Models/Wherehouse";
 import { z } from "zod";
 import Product from "../Models/Product";
 import mongoose from "mongoose";
+import { parse } from "path";
 
 
 export const createWarehouse=  asyncWrapper( async (req: Request, res: Response) => {
@@ -22,9 +23,51 @@ export const createWarehouse=  asyncWrapper( async (req: Request, res: Response)
 })
 
 export const getAllWarehouses=  asyncWrapper( async (req: Request, res: Response) => {
-    const warehouses = await Wherehouse.find();
+    const { page=1, limit=10 ,search} = req.query;
+    let matchstage:any={};
+const pageNumber = parseInt(page as string, 10);
+const limitNumber = parseInt(limit as string, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+    const pagaeLimit=parseInt(limit as string, 10);
+
+    if(typeof search === 'string'){
+        const searchTerms = search ? search.split(/\s+/) : [];
+        
+
+    if (searchTerms.length > 0) {
+        matchstage.$or= [
+            ...searchTerms.map(term => ({
+                $or: [
+                  
+                  
+                    { wareHouseName: { $regex: term, $options: "i" } },
+                    { capacity: { $regex: term, $options: "i" } }
+                ]
+            })).flat()
+        ];
+    }
+    }
+
+
+    // const warehouses = await Wherehouse.find();
+    const warehouses = await Wherehouse.aggregate([
+        {
+            $match: matchstage
+        },
+        { $skip:skip  },
+        { $limit: pagaeLimit}
+
+    ])
+
+    const totalCount = await Wherehouse.countDocuments(matchstage);
+    const totalPages = Math.ceil(totalCount / pagaeLimit);
+    const nextPage = pageNumber < totalPages ? pageNumber + 1 : null;
+   const prevPage = pageNumber > 1 ? pageNumber - 1 : null;
     res.status(200).json({
         message: 'Warehouses retrieved successfully',
+        totalPages,
+        nextPage,
+        prevPage,
         data: warehouses
     });
 })
@@ -98,7 +141,15 @@ export const deleteWarehouse=asyncWrapper( async (req: Request, res: Response) =
 
 
 export const howmuchProduct=asyncWrapper(async (req: Request, res: Response) => {
-    const { id } = req.query;
+        const { page=1, limit=10 ,search,id} = req.query;
+
+    let matchstage:any={};
+const pageNumber = parseInt(page as string, 10);
+const limitNumber = parseInt(limit as string, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+    const pagaeLimit=parseInt(limit as string, 10);
+
+
     z.string().parse(id);
     if (typeof id !== 'string') {
         return res.status(400).json({ message: 'Invalid Warehouse ID' });
@@ -107,19 +158,36 @@ export const howmuchProduct=asyncWrapper(async (req: Request, res: Response) => 
     if (!id) {
         return res.status(400).json({ message: 'Warehouse ID is required' });
     }
+
+      if(typeof search === 'string'){
+        const searchTerms = search ? search.split(/\s+/) : [];
+        
+
+    if (searchTerms.length > 0) {
+        matchstage.$or= [
+            ...searchTerms.map(term => ({
+                $or: [
+                  
+                  
+                    { productName: { $regex: term, $options: "i" } },
+                    { capacity: { $regex: term, $options: "i" } }
+                ]
+            })).flat()
+        ];
+    }
+    }
     const warehouse = await Wherehouse.findById(id);
     if (!warehouse) {
         return res.status(404).json({ message: 'Warehouse not found' });
     }
+    matchstage.warehouseId=new mongoose.Types.ObjectId(id);
 
     const howMuchProductAggregation=await Product.aggregate([
         {
-            $match: {
-                warehouseId: new mongoose.Types.ObjectId(id)
-            }
+            $match: matchstage
         },
         {
-    $group: {
+     $group: {
       _id: "$productName",
       totalQuantity: { $sum: "$quantity" }
     }
@@ -130,14 +198,28 @@ export const howmuchProduct=asyncWrapper(async (req: Request, res: Response) => 
       productName: "$_id",
       totalQuantity: 1
     }
-  }
-  
+  },
 
-        
-            
+  {
+    $skip:skip
+  },
+  {
+    $limit:pagaeLimit
+
+  }
+           
     ])
+
+    const totalCount = await Product.countDocuments(matchstage);
+    const totalPages = Math.ceil(totalCount / pagaeLimit);
+    const nextPage = pageNumber < totalPages ? pageNumber + 1 : null;
+   const prevPage = pageNumber > 1 ? pageNumber - 1 : null;
     res.status(200).json({
         message: 'Warehouse retrieved successfully',
+        totalPages,
+        currentPage: pageNumber,
+        nextPage,
+        prevPage,
         data: howMuchProductAggregation
     });
 })

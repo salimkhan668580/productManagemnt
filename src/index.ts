@@ -2,8 +2,9 @@ import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import dbConnect from './DBConnect/db';
 import 'dotenv/config'
-
+import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import winston from 'winston';
 
 
 dbConnect();
@@ -23,7 +24,8 @@ import wishListRouter from './routes/wishListRouter';
 
 const app = express();
 const PORT = 3000;
-
+// setup the logger 
+app.use(morgan('dev'))
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -35,6 +37,18 @@ app.use('/api/message',messageRouter);
 app.use('/api/activity-log', activityLogRouter);
 app.use('/api/createPayment', orderRouter);
 app.use('/api/wishlist', wishListRouter);
+const logger = winston.createLogger({
+  level: 'info', // sabse kam priority level (info, warn, error)
+  format: winston.format.combine(
+     winston.format.colorize(),
+    winston.format.timestamp(),
+    winston.format.simple()
+  ),
+  transports: [
+    new winston.transports.Console(), // Console me dikhaye
+    new winston.transports.File({ filename: 'logs/app.log' }) // File me save kare
+  ]
+});
 
 
 app.get('/',isLoggedIn ,(req: Request, res: Response) => {
@@ -64,5 +78,7 @@ registerSocketServer(httpServer);
 
 httpServer.listen(PORT, () => {
     console.log(`📚 Swagger docs at http://localhost:${PORT}/api-docs`);
-  console.log(`Server running at http://localhost:${PORT}`);
+    logger.info(`Server running at http://localhost:${PORT}`);
+
+  // console.log(`Server running at http://localhost:${PORT}`);
 });
